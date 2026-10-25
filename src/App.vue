@@ -13,7 +13,9 @@ const STORAGE_KEY = "campus-events-bookings";
 function loadBookings(): number[] {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? JSON.parse(raw) : [];
+    const parsed: unknown = raw ? JSON.parse(raw) : [];
+    // valid JSON is not enough: it must be a list of event ids
+    return Array.isArray(parsed) ? parsed.filter((id): id is number => typeof id === "number") : [];
   } catch (error) {
     console.error(error);
     return [];
